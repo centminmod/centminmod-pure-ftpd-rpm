@@ -29,9 +29,12 @@ RUN curl -LO https://kojipkgs.fedoraproject.org/packages/pure-ftpd/1.0.51/1.el9/
     && mv pure-ftpd.spec SPECS/ \
     && mv pure-ftpd-1.0.51.tar.bz2 SOURCES/ \
     && mv *.patch *.service *.te *.logrotate pure-ftpd.README.SELinux SOURCES/ \
+    # Download upstream 1.0.52 tarball
+    && curl -L -o SOURCES/pure-ftpd-1.0.52.tar.bz2 \
+         http://download.pure-ftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.52.tar.bz2 \
     # Bump version and source URL
     && sed -i 's/^Version: *1\.0\.51/Version:    1.0.52/' SPECS/pure-ftpd.spec \
-    && sed -i 's|^Source0:.*|Source0:    http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.52.tar.bz2|' SPECS/pure-ftpd.spec \
+    && sed -i 's|^Source0:.*|Source0:    http://download.pure-ftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.52.tar.bz2|' SPECS/pure-ftpd.spec \
     # Add changelog entry
     && sed -i '/^%changelog/a\* '"$(date +"%a %b %d %Y")"' Builder <builder@local> - 1.0.52-1\
 - Updated to 1.0.52' SPECS/pure-ftpd.spec
