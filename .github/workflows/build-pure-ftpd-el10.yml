@@ -21,7 +21,7 @@ jobs:
 
       - name: Run rpmbuild container
         run: |
-          docker run --rm \
+          docker run --rm -u root \
             -v ${{ github.workspace }}/output:/output \
             pure-ftpd-el10-build:latest \
             bash -c "
