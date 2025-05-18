@@ -35,7 +35,3 @@ RUN curl -LO https://kojipkgs.fedoraproject.org/packages/pure-ftpd/1.0.51/1.el9/
     # Add changelog entry
     && sed -i '/^%changelog/a\* '"$(date +"%a %b %d %Y")"' Builder <builder@local> - 1.0.52-1\
 - Updated to 1.0.52' SPECS/pure-ftpd.spec
-
-# Default entrypoint
-ENTRYPOINT ["bash"]
-CMD ["-c", "echo 'Run rpmbuild -ba SPECS/pure-ftpd.spec' && bash"]
