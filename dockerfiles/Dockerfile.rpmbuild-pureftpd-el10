@@ -1,0 +1,40 @@
+FROM almalinux:10
+
+# Enable CRB and EPEL
+RUN dnf -y config-manager --set-enabled crb \
+    && dnf -y install epel-release \
+    && dnf clean all
+
+# Install build tools and dependencies
+RUN dnf -y groupinstall "Development Tools" \
+    && dnf -y install rpm-build rpmdevtools redhat-rpm-config \
+      pam-devel libcap-devel libxcrypt-devel \
+      openldap-devel mariadb-connector-c-devel \
+      libpq-devel openssl-devel checkpolicy selinux-policy-devel \
+      git systemd which curl \
+    && dnf clean all
+
+# Create builder user and set up RPM tree
+RUN useradd -m builder \
+    && su - builder -c "rpmdev-setuptree"
+
+WORKDIR /home/builder/rpmbuild
+USER builder
+
+# Download EPEL9 SRPM, extract spec and sources, then bump to 1.0.52
+RUN curl -LO https://kojipkgs.fedoraproject.org/packages/pure-ftpd/1.0.51/1.el9/src/pure-ftpd-1.0.51-1.el9.src.rpm \
+    && rpm2cpio pure-ftpd-1.0.51-1.el9.src.rpm | cpio -idmv \
+    && mkdir -p SPECS SOURCES \
+    && mv pure-ftpd.spec SPECS/ \
+    && mv pure-ftpd-1.0.51.tar.bz2 SOURCES/ \
+    && mv *.patch *.service *.te *.logrotate pure-ftpd.README.SELinux SOURCES/ \
+    # Bump version and source URL
+    && sed -i 's/^Version: *1\.0\.51/Version:    1.0.52/' SPECS/pure-ftpd.spec \
+    && sed -i 's|^Source0:.*|Source0:    http://download.pureftpd.org/pub/pure-ftpd/releases/pure-ftpd-1.0.52.tar.bz2|' SPECS/pure-ftpd.spec \
+    # Add changelog entry
+    && sed -i '/^%changelog/a\* '"$(date +"%a %b %d %Y")"' Builder <builder@local> - 1.0.52-1\
+- Updated to 1.0.52' SPECS/pure-ftpd.spec
+
+# Default entrypoint
+ENTRYPOINT ["bash"]
+CMD ["-c", "echo 'Run rpmbuild -ba SPECS/pure-ftpd.spec' && bash"]
