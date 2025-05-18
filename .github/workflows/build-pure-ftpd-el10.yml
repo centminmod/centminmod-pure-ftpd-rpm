@@ -26,9 +26,7 @@ jobs:
             pure-ftpd-el10-build:latest \
             bash -c "
               set -euo pipefail;
-              # Build as 'builder' user
               su - builder -c 'cd /home/builder/rpmbuild && rpmbuild -ba SPECS/pure-ftpd.spec';
-              # Copy artifacts back as root
               cp /home/builder/rpmbuild/RPMS/*/* /output/;
             "
       - name: Upload RPM artifacts
