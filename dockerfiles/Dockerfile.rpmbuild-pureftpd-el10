@@ -1,7 +1,8 @@
 FROM almalinux/10-kitten-init
 
 # Enable CRB and EPEL
-RUN dnf -y config-manager --set-enabled crb \
+RUN dnf -y install dnf-plugins-core \
+    && dnf -y config-manager --set-enabled crb \
     && dnf -y install epel-release \
     && dnf clean all
 
