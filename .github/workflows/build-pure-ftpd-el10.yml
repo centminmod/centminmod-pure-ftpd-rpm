@@ -13,7 +13,7 @@ jobs:
       - name: Build Docker image
         run: |
           docker build \
-            -f docker/Dockerfile.rpmbuild-pureftpd-el10 \
+            -f dockerfiles/Dockerfile.rpmbuild-pureftpd-el10 \
             -t pure-ftpd-el10-build:latest .
 
       - name: Create build directory
