@@ -1,7 +1,7 @@
 name: Build Pure-FTPd EL10 RPM
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   build:
