@@ -30,5 +30,7 @@ jobs:
               cp /home/builder/rpmbuild/RPMS/*/* /output/;
             "
       - name: Upload RPM artifacts
+        uses: actions/upload-artifact@v4
+        with:
           name: pure-ftpd-el10-rpms
           path: output/*.rpm
