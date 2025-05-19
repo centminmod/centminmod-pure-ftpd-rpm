@@ -22,11 +22,12 @@ jobs:
       - name: Run rpmbuild container
         run: |
           docker run --rm \
+            -u root \
             -v ${{ github.workspace }}/output:/output \
             pure-ftpd-el10-build:latest \
             bash -c "
               set -euo pipefail;
-              su - builder -c 'cd /home/builder/rpmbuild && rpmbuild -ba SPECS/pure-ftpd.spec';
+              rpmbuild --define '_topdir /home/builder/rpmbuild' -ba /home/builder/rpmbuild/SPECS/pure-ftpd.spec;
               cp /home/builder/rpmbuild/RPMS/*/* /output/;
             "
       - name: Upload RPM artifacts
