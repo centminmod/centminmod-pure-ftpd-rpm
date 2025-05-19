@@ -29,9 +29,13 @@ jobs:
               set -euo pipefail;
               rpmbuild --define '_topdir /home/builder/rpmbuild' -ba /home/builder/rpmbuild/SPECS/pure-ftpd.spec;
               cp /home/builder/rpmbuild/RPMS/*/* /output/;
+              cp /home/builder/rpmbuild/SRPMS/* /output/;
+              ls -lAh /output/;
             "
       - name: Upload RPM artifacts
         uses: actions/upload-artifact@v4
         with:
           name: pure-ftpd-el10-rpms
-          path: output/*.rpm
+          path: |
+            output/*.rpm
+            output/*.src.rpm
